@@ -15,3 +15,95 @@ export function saveRecords(records) {
     saveData(data);
 
 }
+
+export function getRecord(groupId, date, studentId) {
+
+    return getRecords().find(record =>
+
+        record.groupId === groupId &&
+        record.date === date &&
+        record.studentId === studentId
+
+    );
+
+}
+
+export function createRecord(groupId, date, studentId) {
+
+    const records = getRecords();
+
+    const record = {
+
+        groupId,
+        date,
+        studentId,
+
+        values: {}
+
+    };
+
+    records.push(record);
+
+    saveRecords(records);
+
+    return record;
+
+}
+export function setValue(groupId, date, studentId, criterionId, value) {
+
+    const records = getRecords();
+
+    let record = records.find(r =>
+
+        r.groupId === groupId &&
+        r.date === date &&
+        r.studentId === studentId
+
+    );
+
+    if (!record) {
+
+        record = {
+
+            groupId,
+            date,
+            studentId,
+            values: {}
+
+        };
+
+        records.push(record);
+
+    }
+
+    record.values[criterionId] = value;
+
+    saveRecords(records);
+
+}
+
+export function getValue(groupId, date, studentId, criterionId) {
+
+    const record = getRecord(groupId, date, studentId);
+
+    if (!record)
+        return 0;
+
+    return record.values[criterionId] ?? 0;
+
+}
+export function getSelectedDate(){
+
+    return loadData().selectedDate;
+
+}
+
+export function setSelectedDate(date){
+
+    const data = loadData();
+
+    data.selectedDate = date;
+
+    saveData(data);
+
+}

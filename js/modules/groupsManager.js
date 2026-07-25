@@ -45,7 +45,7 @@ export function getGroup(id) {
 
 }
 
-export function setStudents(groupId, students) {
+export function setStudents(groupId, studentsText) {
 
     const data = loadData();
 
@@ -53,7 +53,13 @@ export function setStudents(groupId, students) {
 
     if (!group) return;
 
-    group.students = students;
+    group.students = studentsText.map((name, index) => ({
+
+        id: Date.now() + index,
+
+        name: name.trim()
+
+    }));
 
     saveData(data);
 

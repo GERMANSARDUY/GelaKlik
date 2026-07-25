@@ -106,7 +106,9 @@ if (selected) {
             id="studentsText"
             rows="12"
             style="width:100%;"
-            placeholder="Ikasle bat lerro bakoitzean">${selected.students.join("\n")}</textarea>
+            placeholder="Ikasle bat lerro bakoitzean">${selected.students
+    .map(student => student.name)
+    .join("\n")}</textarea>
 
         <br><br>
 

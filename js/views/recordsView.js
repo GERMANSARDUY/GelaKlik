@@ -5,10 +5,18 @@ import {
     selectGroup,
     getFirstGroupId
 } from "../modules/groupsManager.js";
-
+import { SCORE_ICONS } from "../modules/constants.js";
+import {
+    getCriteria
+} from "../modules/criteriaManager.js";
+import {
+    getValue,
+    getSelectedDate
+} from "../modules/recordsManager.js";
 export function recordsView() {
 
     const groups = getGroups();
+    const criteria = getCriteria();
 
     let selectedId = getSelectedGroupId();
 
@@ -28,9 +36,11 @@ export function recordsView() {
         ? getGroup(selectedId)
         : null;
 
-    const today = new Date().toISOString().split("T")[0];
+    const today =
+    getSelectedDate() ??
+    new Date().toISOString().split("T")[0];
 
-    return `
+    let html = `
 
         <h1>Erregistroak</h1>
 
@@ -46,7 +56,7 @@ export function recordsView() {
 
                     <option
                         value="${g.id}"
-                        ${g.id===selectedId ? "selected":""}>
+                        ${g.id===selectedId?"selected":""}>
 
                         ${g.name}
 
@@ -73,47 +83,86 @@ export function recordsView() {
 
         <div class="card">
 
-            <h2>Ikasleak</h2>
+            <table class="recordsTable">
 
-            ${
-                !group || group.students.length===0
+                <thead>
 
-                ?
+                    <tr>
 
-                "<p>Ez dago ikaslerik.</p>"
+                        <th>Ikaslea</th>
 
-                :
+                        ${criteria.map(c => `
 
-                `<ul>
+    <th>${c.name}</th>
 
-                    ${group.students.map(student=>`
+`).join("")}
 
-                        <li>${student}</li>
+                    </tr>
 
-                    `).join("")}
+                </thead>
 
-                </ul>`
+                <tbody>
+    `;
 
-            }
+    if(group){
+
+        group.students.forEach(student=>{
+
+            html+=`
+
+                <tr>
+
+                    <td>${student.name}</td>
+
+                   ${criteria.map(c => {
+
+    const value = getValue(
+        group.id,
+        today,
+        student.id,
+        c.id
+    );
+
+
+    return `
+
+        <td>
+
+            <button
+                class="scoreButton"
+                data-group="${group.id}"
+                data-student="${student.id}"
+                data-criterion="${c.id}"
+                data-value="${value}">
+
+                ${SCORE_ICONS[value]}
+
+            </button>
+
+        </td>
+
+    `;
+
+}).join("")}
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+    html+=`
+
+                </tbody>
+
+            </table>
 
         </div>
 
     `;
 
-}
-
-export function activateRecordsView(render){
-
-    const select = document.getElementById("groupSelect");
-
-    if(!select) return;
-
-    select.onchange = ()=>{
-
-        selectGroup(Number(select.value));
-
-        render();
-
-    };
+    return html;
 
 }

@@ -1,17 +1,12 @@
 const DB_KEY = "gelaklik-data";
 
 const DEFAULT_DATA = {
-
     groups: [],
-
     criteria: [],
-
     records: [],
-
     settings: {},
-
-    selectedGroupId: null
-
+    selectedGroupId: null,
+    selectedDate: null
 };
 
 export function loadData() {

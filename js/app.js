@@ -1,6 +1,8 @@
 import {
-    recordsView,
-    activateRecordsView
+    activateRecordsController
+} from "./controllers/recordsController.js";
+import {
+    recordsView
 } from "./views/recordsView.js";
 import { renderLayout } from "./modules/layout.js";
 
@@ -59,7 +61,7 @@ if(currentView==="criteria"){
 
 if(currentView==="records"){
 
-    activateRecordsView(render);
+    activateRecordsController(render);
 
 }
 }
