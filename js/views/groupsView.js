@@ -7,7 +7,7 @@ import {
     setStudents,
     renameGroup,
     deleteGroup
-} from "../modules/groupManager.js";
+} from "../modules/groupsManager.js";
 
 export function groupsView() {
 

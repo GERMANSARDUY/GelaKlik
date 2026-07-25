@@ -1,6 +1,14 @@
+import {
+    recordsView,
+    activateRecordsView
+} from "./views/recordsView.js";
 import { renderLayout } from "./modules/layout.js";
 
 import { homeView } from "./views/homeView.js";
+import {
+    criteriaView,
+    activateCriteriaView
+} from "./views/criteriaView.js";
 
 import {
     groupsView,
@@ -19,14 +27,20 @@ function render() {
 
     switch (currentView) {
 
-        case "groups":
-            content = groupsView();
-            break;
+    case "groups":
+        content = groupsView();
+        break;
 
-        default:
-            content = homeView();
+    case "criteria":
+        content = criteriaView();
+        break;
+case "records":
+    content = recordsView();
+    break;
+    default:
+        content = homeView();
 
-    }
+}
 
     app.innerHTML = renderLayout(content);
 
@@ -37,7 +51,17 @@ function render() {
         activateGroupsView(render);
 
     }
+if(currentView==="criteria"){
 
+    activateCriteriaView(render);
+
+}
+
+if(currentView==="records"){
+
+    activateRecordsView(render);
+
+}
 }
 
 function connectMenu() {
@@ -47,7 +71,6 @@ function connectMenu() {
     buttons[0].onclick = () => {
 
         currentView = "home";
-
         render();
 
     };
@@ -55,8 +78,34 @@ function connectMenu() {
     buttons[1].onclick = () => {
 
         currentView = "groups";
-
         render();
+
+    };
+
+    buttons[2].onclick = () => {
+
+        currentView = "criteria";
+        render();
+
+    };
+
+    buttons[3].onclick = ()=>{
+
+    currentView="records";
+
+    render();
+
+};
+
+    buttons[4].onclick = () => {
+
+        alert("Laster erabilgarri.");
+
+    };
+
+    buttons[5].onclick = () => {
+
+        alert("Laster erabilgarri.");
 
     };
 

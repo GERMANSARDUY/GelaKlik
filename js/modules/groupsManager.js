@@ -87,3 +87,13 @@ export function deleteGroup(id) {
     saveData(data);
 
 }
+export function getFirstGroupId(){
+
+    const groups = getGroups();
+
+    if(groups.length===0)
+        return null;
+
+    return groups[0].id;
+
+}

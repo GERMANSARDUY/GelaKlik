@@ -1,11 +1,22 @@
 # GelaKlik
 
-Irakasleentzako ikasgelako erregistro aplikazioa.
+GelaKlik DBH eta Batxilergoko irakasleentzat garatutako ikasgelako kudeaketa aplikazioa da.
 
-Garapena:
+## Helburu nagusiak
+
+- Taldeak kudeatzea.
+- Ikasleen zerrendak gordetzea.
+- Ebaluazio-irizpideak definitzea.
+- Eguneroko erregistro azkarrak egitea.
+- Emaitzak automatikoki kalkulatzea.
+
+## Teknologia
+
 - HTML
 - CSS
-- JavaScript
-- PWA
+- JavaScript (ES Modules)
+- LocalStorage
 
-Hizkuntza: Euskara
+## Garapen egoera
+
+Une honetan garapen aktiboan.
