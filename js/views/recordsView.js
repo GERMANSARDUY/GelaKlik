@@ -5,7 +5,9 @@ import {
     selectGroup,
     getFirstGroupId
 } from "../modules/groupsManager.js";
-import { SCORE_ICONS } from "../modules/constants.js";
+import {
+    getScoreIcon
+} from "../modules/constants.js";
 import {
     getCriteria
 } from "../modules/criteriaManager.js";
@@ -72,12 +74,36 @@ export function recordsView() {
 
             <br><br>
 
-            <input
-                id="recordDate"
-                type="date"
-                value="${today}">
+           <button
+    id="previousDay"
+    type="button">
 
-        </div>
+    ◀
+
+</button>
+
+<input
+    id="recordDate"
+    type="date"
+    value="${today}">
+
+<button
+    id="nextDay"
+    type="button">
+
+    ▶
+
+</button>
+
+<button
+    id="todayButton"
+    type="button">
+
+    Gaur
+
+</button>
+
+</div>
 
         <br>
 
@@ -133,9 +159,10 @@ export function recordsView() {
                 data-group="${group.id}"
                 data-student="${student.id}"
                 data-criterion="${c.id}"
+data-type="${c.type}"
                 data-value="${value}">
 
-                ${SCORE_ICONS[value]}
+                ${getScoreIcon(c.type, value)}
 
             </button>
 

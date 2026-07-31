@@ -93,3 +93,50 @@ padding:20px;
     transform:scale(1.25);
 
 }
+.studentDetailsTable{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.studentDetailsTable td{
+
+    padding:6px 0;
+
+}
+
+.studentDetailsTable td:last-child{
+
+    text-align:right;
+
+    font-weight:bold;
+
+}
+
+.studentTotals{
+
+    margin-top:20px;
+
+    padding-top:15px;
+
+    border-top:1px solid #ddd;
+
+}
+
+.studentTotals p{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin:8px 0;
+
+}
+
+.studentTotals strong{
+
+    font-size:1.1rem;
+
+}

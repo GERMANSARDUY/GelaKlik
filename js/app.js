@@ -1,11 +1,21 @@
 import {
+    activateResultsController
+} from "./controllers/resultsController.js";
+import {
+    resultsView,
+    activateResultsView
+} from "./views/resultsView.js";
+import {
     activateRecordsController
 } from "./controllers/recordsController.js";
 import {
     recordsView
 } from "./views/recordsView.js";
 import { renderLayout } from "./modules/layout.js";
-
+import {
+    settingsView,
+    activateSettingsView
+} from "./views/settingsView.js";
 import { homeView } from "./views/homeView.js";
 import {
     criteriaView,
@@ -28,7 +38,9 @@ function render() {
     let content = "";
 
     switch (currentView) {
-
+case "settings":
+    content = settingsView();
+    break;
     case "groups":
         content = groupsView();
         break;
@@ -38,6 +50,9 @@ function render() {
         break;
 case "records":
     content = recordsView();
+    break;
+    case "results":
+    content = resultsView();
     break;
     default:
         content = homeView();
@@ -62,6 +77,18 @@ if(currentView==="criteria"){
 if(currentView==="records"){
 
     activateRecordsController(render);
+
+}
+if(currentView==="results"){
+
+    activateResultsView(render);
+
+    activateResultsController(render);
+
+}
+if(currentView==="settings"){
+
+    activateSettingsView(render);
 
 }
 }
@@ -99,16 +126,20 @@ function connectMenu() {
 
 };
 
-    buttons[4].onclick = () => {
+   buttons[4].onclick = () => {
 
-        alert("Laster erabilgarri.");
+    currentView = "results";
 
-    };
+    render();
 
-    buttons[5].onclick = () => {
+};
 
-        alert("Laster erabilgarri.");
+   buttons[5].onclick = () => {
 
-    };
+    currentView = "settings";
+
+    render();
+
+};
 
 }

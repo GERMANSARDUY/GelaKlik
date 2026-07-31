@@ -1,5 +1,7 @@
 import { selectGroup } from "../modules/groupsManager.js";
-import { SCORE_ICONS } from "../modules/constants.js";
+import {
+    getScoreIcon
+} from "../modules/constants.js";
 import {
     setValue,
     setSelectedDate
@@ -33,42 +35,102 @@ if(dateInput){
     };
 
 }
+const previousButton =
+    document.getElementById("previousDay");
+if(previousButton){
+
+    previousButton.onclick = ()=>{
+
+        const current = new Date(dateInput.value);
+
+        current.setDate(current.getDate() - 1);
+
+        const newDate =
+            current.toISOString().split("T")[0];
+
+        setSelectedDate(newDate);
+
+        render();
+
+    };
+
+}
+const nextButton =
+    document.getElementById("nextDay");
+if(nextButton){
+
+    nextButton.onclick = ()=>{
+
+        const current = new Date(dateInput.value);
+
+        current.setDate(current.getDate() + 1);
+
+        const newDate =
+            current.toISOString().split("T")[0];
+
+        setSelectedDate(newDate);
+
+        render();
+
+    };
+
+}
+const todayButton =
+    document.getElementById("todayButton");
+    if(todayButton){
+
+    todayButton.onclick = ()=>{
+
+        const today =
+            new Date().toISOString().split("T")[0];
+
+        setSelectedDate(today);
+
+        render();
+
+    };
+
+}
     const buttons = document.querySelectorAll(".scoreButton");
 
     buttons.forEach(button=>{
 
         button.onclick = ()=>{
 
-            let value = Number(button.dataset.value);
+    let value = Number(button.dataset.value);
 
-            value++;
+    value++;
 
-            if(value>3){
+    if(value>3){
 
-                value=0;
+        value=0;
 
-            }
+    }
 
-            button.dataset.value=value;
-button.textContent = SCORE_ICONS[value];
+    button.dataset.value = value;
 
-            const date=document.getElementById("recordDate").value;
+    button.textContent = getScoreIcon(
+        button.dataset.type,
+        value
+    );
 
-            setValue(
+    const date = document.getElementById("recordDate").value;
 
-                Number(button.dataset.group),
+    setValue(
 
-                date,
+        Number(button.dataset.group),
 
-                Number(button.dataset.student),
+        date,
 
-                Number(button.dataset.criterion),
+        Number(button.dataset.student),
 
-                value
+        Number(button.dataset.criterion),
 
-            );
+        value
 
-        };
+    );
+
+};   // <-- onclick hemen amaitzen da
 
     });
 

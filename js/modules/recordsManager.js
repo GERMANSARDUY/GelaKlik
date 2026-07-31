@@ -107,3 +107,33 @@ export function setSelectedDate(date){
     saveData(data);
 
 }
+export function getStudentCriterionHistory(
+    groupId,
+    studentId,
+    criterionId
+) {
+
+    return getRecords()
+
+        .filter(record =>
+
+            record.groupId === groupId &&
+            record.studentId === studentId &&
+            (record.values[criterionId] ?? 0) > 0
+
+        )
+
+        .map(record => ({
+
+            date: record.date,
+            value: record.values[criterionId]
+
+        }))
+
+        .sort((a, b) =>
+
+            a.date.localeCompare(b.date)
+
+        );
+
+}
