@@ -6,7 +6,10 @@ import {
 } from "../modules/evaluationManager.js";
 import {
     setCloudUrl,
-    pingCloud
+    getCloudUrl,
+    pingCloud,
+    saveToCloud,
+    loadFromCloud
 } from "../modules/syncManager.js";
 export function settingsView() {
 
@@ -66,20 +69,37 @@ export function settingsView() {
 
     <br>
 
-    <input 
-        id="cloudUrl"
-        type="text"
-        placeholder="Itsatsi Google Apps Script helbidea"
-        style="width:90%"
-    >
+   <input 
+    id="cloudUrl"
+    type="text"
+    value="${getCloudUrl()}"
+    placeholder="Itsatsi Google Apps Script helbidea"
+    style="width:90%"
+>
 
     <br><br>
 
-    <button id="testCloud">
+   <button id="testCloud">
 
-        🔌 Konexioa probatu
+    🔌 Konexioa probatu
 
-    </button>
+</button>
+
+<br><br>
+
+<button id="saveCloud">
+
+    ⬆️ Hodeira gorde
+
+</button>
+
+<br><br>
+
+<button id="loadCloud">
+
+    ⬇️ Hodeitik kargatu
+
+</button>
 
 </div>
 </div>
@@ -127,7 +147,73 @@ export function activateSettingsView(render) {
     const cloudButton =
         document.getElementById("testCloud");
 
+const saveCloudButton =
+    document.getElementById("saveCloud");
 
+
+if (saveCloudButton) {
+
+
+    saveCloudButton.onclick = async () => {
+
+
+        const saved =
+            await saveToCloud();
+
+
+        if (saved) {
+
+            alert("☁️ Datuak hodeian gordeta.");
+
+        } else {
+
+            alert("❌ Ezin izan dira datuak gorde.");
+
+        }
+
+
+    };
+
+}
+
+
+
+
+const loadCloudButton =
+    document.getElementById("loadCloud");
+
+
+if (loadCloudButton) {
+
+
+    loadCloudButton.onclick = async () => {
+
+
+        const loaded =
+            await loadFromCloud();
+
+
+        if (loaded) {
+
+            alert(
+                "⬇️ Datuak hodeitik kargatuta."
+            );
+
+            render();
+
+
+        } else {
+
+            alert(
+                "❌ Ezin izan dira datuak kargatu."
+            );
+
+        }
+
+
+    };
+
+}
     if (cloudButton) {
 
         cloudButton.onclick = async () => {
