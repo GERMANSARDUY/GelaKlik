@@ -95,19 +95,20 @@ export async function saveToCloud() {
 
         const data = loadData();
 
-        const response = await fetch(
+        await fetch(
             cloudUrl,
             {
                 method: "POST",
+
+                mode: "no-cors",
+
                 headers: {
                     "Content-Type": "text/plain;charset=utf-8"
                 },
+
                 body: JSON.stringify(data)
             }
         );
-
-
-        console.log("POST erantzuna:", response);
 
         return true;
 
