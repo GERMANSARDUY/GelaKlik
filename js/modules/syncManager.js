@@ -12,12 +12,7 @@ let cloudUrl =
 
 
 
-/* =====================================================
-   CLOUD URL
-   ===================================================== */
-
-
-export function setCloudUrl(url) {
+export function setCloudUrl(url){
 
     cloudUrl = url.trim();
 
@@ -29,7 +24,8 @@ export function setCloudUrl(url) {
 }
 
 
-export function getCloudUrl() {
+
+export function getCloudUrl(){
 
     return cloudUrl;
 
@@ -37,21 +33,13 @@ export function getCloudUrl() {
 
 
 
-/* =====================================================
-   KONEXIO PROBA
-   ===================================================== */
+export async function pingCloud(){
 
-
-export async function pingCloud() {
-
-    if (!cloudUrl) {
-
+    if(!cloudUrl)
         return false;
 
-    }
 
-
-    try {
+    try{
 
         const response =
             await fetch(cloudUrl);
@@ -61,15 +49,12 @@ export async function pingCloud() {
             await response.json();
 
 
-        return json.status === "ok";
+        return json.status==="ok";
 
 
-    } catch(error) {
+    }catch(error){
 
-        console.error(
-            "Cloud konexio errorea:",
-            error
-        );
+        console.error(error);
 
         return false;
 
@@ -79,82 +64,20 @@ export async function pingCloud() {
 
 
 
-/* =====================================================
-   HODEIRA GORDE (RECORDS BAKARRIK)
-   ===================================================== */
+
+export async function saveToCloud(){
 
 
-export async function saveToCloud() {
-
-
-    if (!cloudUrl) {
-
+    if(!cloudUrl)
         return false;
 
-    }
 
 
-    try {
+    try{
 
 
-        const localData =
+        const data =
             loadData();
-
-
-
-        // Hodeiko records hartu
-
-        let cloudRecords = [];
-
-        try {
-
-            const response =
-                await fetch(
-                    cloudUrl +
-                    "?action=load"
-                );
-
-
-            const json =
-                await response.json();
-
-
-            if (
-                json.status === "ok" &&
-                json.data &&
-                json.data.records
-            ) {
-
-                cloudRecords =
-                    json.data.records;
-
-            }
-
-        } catch(error) {
-
-            console.warn(
-                "Ez da hodeiko records irakurri:",
-                error
-            );
-
-        }
-
-
-
-        const mergedRecords =
-            mergeRecords(
-                cloudRecords,
-                localData.records || []
-            );
-
-
-
-        const payload = {
-
-            records:
-                mergedRecords
-
-        };
 
 
 
@@ -167,26 +90,19 @@ export async function saveToCloud() {
                 mode:"no-cors",
 
                 headers:{
-
                     "Content-Type":
                     "text/plain;charset=utf-8"
-
                 },
 
                 body:
-                    JSON.stringify(payload)
+                JSON.stringify({
+
+                    records:
+                    data.records || []
+
+                })
 
             }
-        );
-
-
-
-        localData.records =
-            mergedRecords;
-
-
-        saveData(
-            localData
         );
 
 
@@ -195,11 +111,11 @@ export async function saveToCloud() {
 
 
 
-    } catch(error) {
+    }catch(error){
 
 
         console.error(
-            "Cloud gordetze errorea:",
+            "Cloud save:",
             error
         );
 
@@ -208,31 +124,26 @@ export async function saveToCloud() {
 
     }
 
+
 }
 
 
 
-/* =====================================================
-   HODEITIK KARGATU (RECORDS BAKARRIK)
-   ===================================================== */
+
+export async function loadFromCloud(){
 
 
-export async function loadFromCloud() {
-
-
-    if (!cloudUrl) {
-
+    if(!cloudUrl)
         return false;
 
-    }
 
 
-    try {
+    try{
 
 
         const response =
             await fetch(
-                cloudUrl +
+                cloudUrl+
                 "?action=load"
             );
 
@@ -243,45 +154,42 @@ export async function loadFromCloud() {
 
 
 
-        if (
-            json.status !== "ok" ||
-            !json.data
-        ) {
+        if(
+            json.status==="ok" &&
+            json.data
+        ){
 
-            return false;
+
+            const data =
+                loadData();
+
+
+
+            data.records =
+                json.data.records || [];
+
+
+
+            saveData(data);
+
+
+
+            return true;
+
 
         }
 
 
 
-        const localData =
-            loadData();
+        return false;
 
 
 
-        localData.records =
-            mergeRecords(
-                localData.records || [],
-                json.data.records || []
-            );
-
-
-
-        saveData(
-            localData
-        );
-
-
-
-        return true;
-
-
-
-    } catch(error) {
+    }catch(error){
 
 
         console.error(
-            "Cloud kargatze errorea:",
+            "Cloud load:",
             error
         );
 
@@ -290,64 +198,5 @@ export async function loadFromCloud() {
 
     }
 
-}
-
-
-
-/* =====================================================
-   RECORDS BATERATU
-   ===================================================== */
-
-
-function mergeRecords(
-    baseRecords,
-    newRecords
-) {
-
-
-    const result =
-        [
-            ...baseRecords
-        ];
-
-
-
-    newRecords.forEach(newRecord => {
-
-
-        const index =
-            result.findIndex(oldRecord =>
-
-                oldRecord.groupId === newRecord.groupId &&
-                oldRecord.date === newRecord.date &&
-                oldRecord.studentId === newRecord.studentId
-
-            );
-
-
-
-        if (index >= 0) {
-
-
-            result[index] =
-                newRecord;
-
-
-        } else {
-
-
-            result.push(
-                newRecord
-            );
-
-
-        }
-
-
-    });
-
-
-
-    return result;
 
 }
