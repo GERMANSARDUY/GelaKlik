@@ -1,4 +1,7 @@
 import {
+    loadFromCloud
+} from "./modules/syncManager.js";
+import {
     activateResultsController
 } from "./controllers/resultsController.js";
 import {
@@ -99,8 +102,19 @@ function connectMenu() {
 
     buttons[0].onclick = () => {
 
-        currentView = "home";
-        render();
+        let currentView = "home";
+
+
+async function startApp() {
+
+    await loadFromCloud();
+
+    render();
+
+}
+
+
+startApp();
 
     };
 

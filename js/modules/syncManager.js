@@ -29,7 +29,6 @@ export function setCloudUrl(url) {
 }
 
 
-
 export function getCloudUrl() {
 
     return cloudUrl;
@@ -81,52 +80,140 @@ export async function pingCloud() {
 
 
 /* =====================================================
-   HODEIRA GORDE
+   HODEIRA GORDE (RECORDS BAKARRIK)
    ===================================================== */
 
 
 export async function saveToCloud() {
 
+
     if (!cloudUrl) {
+
         return false;
+
     }
+
 
     try {
 
-        const data = loadData();
+
+        const localData =
+            loadData();
+
+
+
+        // Hodeiko records hartu
+
+        let cloudRecords = [];
+
+        try {
+
+            const response =
+                await fetch(
+                    cloudUrl +
+                    "?action=load"
+                );
+
+
+            const json =
+                await response.json();
+
+
+            if (
+                json.status === "ok" &&
+                json.data &&
+                json.data.records
+            ) {
+
+                cloudRecords =
+                    json.data.records;
+
+            }
+
+        } catch(error) {
+
+            console.warn(
+                "Ez da hodeiko records irakurri:",
+                error
+            );
+
+        }
+
+
+
+        const mergedRecords =
+            mergeRecords(
+                cloudRecords,
+                localData.records || []
+            );
+
+
+
+        const payload = {
+
+            records:
+                mergedRecords
+
+        };
+
+
 
         await fetch(
             cloudUrl,
             {
-                method: "POST",
 
-                mode: "no-cors",
+                method:"POST",
 
-                headers: {
-                    "Content-Type": "text/plain;charset=utf-8"
+                mode:"no-cors",
+
+                headers:{
+
+                    "Content-Type":
+                    "text/plain;charset=utf-8"
+
                 },
 
-                body: JSON.stringify(data)
+                body:
+                    JSON.stringify(payload)
+
             }
         );
+
+
+
+        localData.records =
+            mergedRecords;
+
+
+        saveData(
+            localData
+        );
+
+
 
         return true;
 
 
+
     } catch(error) {
+
 
         console.error(
             "Cloud gordetze errorea:",
             error
         );
 
+
         return false;
 
     }
 
 }
+
+
+
 /* =====================================================
-   HODEITIK KARGATU
+   HODEITIK KARGATU (RECORDS BAKARRIK)
    ===================================================== */
 
 
@@ -138,7 +225,6 @@ export async function loadFromCloud() {
         return false;
 
     }
-
 
 
     try {
@@ -158,24 +244,36 @@ export async function loadFromCloud() {
 
 
         if (
-            json.status === "ok" &&
-            json.data
+            json.status !== "ok" ||
+            !json.data
         ) {
 
-
-            saveData(
-                json.data
-            );
-
-
-            return true;
-
+            return false;
 
         }
 
 
 
-        return false;
+        const localData =
+            loadData();
+
+
+
+        localData.records =
+            mergeRecords(
+                localData.records || [],
+                json.data.records || []
+            );
+
+
+
+        saveData(
+            localData
+        );
+
+
+
+        return true;
 
 
 
@@ -190,8 +288,66 @@ export async function loadFromCloud() {
 
         return false;
 
-
     }
 
+}
+
+
+
+/* =====================================================
+   RECORDS BATERATU
+   ===================================================== */
+
+
+function mergeRecords(
+    baseRecords,
+    newRecords
+) {
+
+
+    const result =
+        [
+            ...baseRecords
+        ];
+
+
+
+    newRecords.forEach(newRecord => {
+
+
+        const index =
+            result.findIndex(oldRecord =>
+
+                oldRecord.groupId === newRecord.groupId &&
+                oldRecord.date === newRecord.date &&
+                oldRecord.studentId === newRecord.studentId
+
+            );
+
+
+
+        if (index >= 0) {
+
+
+            result[index] =
+                newRecord;
+
+
+        } else {
+
+
+            result.push(
+                newRecord
+            );
+
+
+        }
+
+
+    });
+
+
+
+    return result;
 
 }
