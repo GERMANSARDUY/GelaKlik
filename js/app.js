@@ -106,7 +106,7 @@ function connectMenu() {
 
 
 async function startApp() {
-
+ console.log("GelaKlik hasiera - cloud karga");
     await loadFromCloud();
 
     render();
