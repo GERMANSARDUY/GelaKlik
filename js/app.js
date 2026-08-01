@@ -109,23 +109,7 @@ function startApp() {
 
     render();
 
-
-    loadFromCloud()
-        .then(() => {
-
-            console.log(
-                "Cloud karga automatikoa eginda"
-            );
-
-            render();
-
-        })
-        .catch(error => {
-
-            console.error(
-                "Cloud karga errorea:",
-                error
-            );
+}
 
         });
 
