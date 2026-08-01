@@ -105,19 +105,29 @@ function connectMenu() {
         let currentView = "home";
 
 
-async function startApp() {
-
-    console.log("GelaKlik hasiera - cloud karga HASI");
-
-    const result =
-        await loadFromCloud();
-
-    console.log(
-        "Cloud karga emaitza:",
-        result
-    );
+function startApp() {
 
     render();
+
+
+    loadFromCloud()
+        .then(() => {
+
+            console.log(
+                "Cloud karga automatikoa eginda"
+            );
+
+            render();
+
+        })
+        .catch(error => {
+
+            console.error(
+                "Cloud karga errorea:",
+                error
+            );
+
+        });
 
 }
 
