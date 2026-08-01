@@ -1,10 +1,30 @@
 import { loadData, saveData } from "./storage.js";
 
+import {
+    saveToCloud
+} from "./syncManager.js";
+
+
+
+function autoCloudSave() {
+
+    setTimeout(() => {
+
+        saveToCloud();
+
+    }, 2000);
+
+}
+
+
+
 export function getRecords() {
 
     return loadData().records;
 
 }
+
+
 
 export function saveRecords(records) {
 
@@ -14,7 +34,11 @@ export function saveRecords(records) {
 
     saveData(data);
 
+    autoCloudSave();
+
 }
+
+
 
 export function getRecord(groupId, date, studentId) {
 
@@ -27,6 +51,8 @@ export function getRecord(groupId, date, studentId) {
     );
 
 }
+
+
 
 export function createRecord(groupId, date, studentId) {
 
@@ -42,16 +68,31 @@ export function createRecord(groupId, date, studentId) {
 
     };
 
+
     records.push(record);
 
+
     saveRecords(records);
+
 
     return record;
 
 }
-export function setValue(groupId, date, studentId, criterionId, value) {
+
+
+
+export function setValue(
+    groupId,
+    date,
+    studentId,
+    criterionId,
+    value
+) {
+
 
     const records = getRecords();
+
+
 
     let record = records.find(r =>
 
@@ -61,42 +102,73 @@ export function setValue(groupId, date, studentId, criterionId, value) {
 
     );
 
+
+
     if (!record) {
+
 
         record = {
 
             groupId,
             date,
             studentId,
-            values: {}
+            values:{}
 
         };
 
+
         records.push(record);
+
 
     }
 
+
+
     record.values[criterionId] = value;
+
+
 
     saveRecords(records);
 
+
 }
 
-export function getValue(groupId, date, studentId, criterionId) {
 
-    const record = getRecord(groupId, date, studentId);
+
+export function getValue(
+    groupId,
+    date,
+    studentId,
+    criterionId
+) {
+
+
+    const record =
+        getRecord(
+            groupId,
+            date,
+            studentId
+        );
+
 
     if (!record)
         return 0;
 
+
     return record.values[criterionId] ?? 0;
 
+
 }
+
+
+
 export function getSelectedDate(){
 
     return loadData().selectedDate;
 
 }
+
+
 
 export function setSelectedDate(date){
 
@@ -107,11 +179,15 @@ export function setSelectedDate(date){
     saveData(data);
 
 }
+
+
+
 export function getStudentCriterionHistory(
     groupId,
     studentId,
     criterionId
 ) {
+
 
     return getRecords()
 
@@ -130,7 +206,7 @@ export function getStudentCriterionHistory(
 
         }))
 
-        .sort((a, b) =>
+        .sort((a,b)=>
 
             a.date.localeCompare(b.date)
 
