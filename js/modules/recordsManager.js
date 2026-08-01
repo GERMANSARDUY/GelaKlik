@@ -8,7 +8,11 @@ import {
 
 function autoCloudSave() {
 
+    console.log("AUTO CLOUD SAVE ABIATU");
+
     setTimeout(() => {
+
+        console.log("HODEIRA BIDALTZEN");
 
         saveToCloud();
 
